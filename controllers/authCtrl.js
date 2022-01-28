@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const signup = async (req, res) => {
   try {
     const { username, password } = req.body;
+    console.log(req.body);
     if (!username && !password) {
       res.status(400).json({ message: "All fie;lds required!!" });
     }
@@ -23,6 +24,7 @@ const signup = async (req, res) => {
 const login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
+    console.log(req.body);
     const user = await User.findOne({ username });
     if (!user) next(new Error("User does not exist!"));
     const isMatch = await bcrypt.compare(password, user.password);
@@ -31,9 +33,10 @@ const login = async (req, res, next) => {
     const accessToken = jwt.sign({ id: user._id }, "123456789", {
       expiresIn: "1h",
     });
+
     await User.findByIdAndUpdate(user._id, { accessToken });
     res.status(200).json({
-      data: { username: user.username },
+      user,
       accessToken,
     });
   } catch (error) {
