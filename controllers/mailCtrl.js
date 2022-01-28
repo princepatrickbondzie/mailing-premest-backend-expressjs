@@ -16,14 +16,12 @@ const send = async (req, res) => {
         { $push: { inbox: [mail._id] } }
       );
 
-      res.status(200).json({ sucess: true, message: "mail sent with success" });
+      res.status(200).json({ success: true, message: "mail sent with success" });
       return;
     }
-  
-
     throw new Error("could not send mail");
   } catch (error) {
-    res.status(500).json({ sucess: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
