@@ -14,8 +14,8 @@ const userSchema = Schema(
       minlength: [6, "minimum password length is 6 characters"],
       required: true,
     },
-    sent: [{ type: Schema.Types.ObjectId, ref: "mail" }],
-    inbox: [{ type: Schema.Types.ObjectId, ref: "mail" }],
+    sent: [{ type: Schema.Types.ObjectId, ref: "Mail" }],
+    inbox: [{ type: Schema.Types.ObjectId, ref: "Mail" }],
   },
   { timestamps: true }
 );

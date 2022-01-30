@@ -17,7 +17,8 @@ const signup = async (req, res) => {
     const user = await User.create({ username, password: hashedPassword });
     res.status(201).json(user);
   } catch (error) {
-    console.error(error);
+    const errObj = handlErrors(error);
+    res.status(400).json(errObj);
   }
 };
 
@@ -40,8 +41,34 @@ const login = async (req, res, next) => {
       accessToken,
     });
   } catch (error) {
-    console.error(error);
+    const errMsg = handlErrors(error);
+    res.status(400).json(errMsg);
   }
+};
+
+const handlErrors = (err) => {
+  let errors = { username: "", password: "", msg: "" };
+
+  if (err.message === "incorrect username") {
+    errors.username = err.message;
+  }
+
+  if (err.message === "incorrect password") {
+    errors.password = err.message;
+  }
+
+  if (err.code === 11000) {
+    errors.username = "the username is not available";
+    return errors;
+  }
+
+  if (err.message.includes("user validation failed")) {
+    Object.values(err.errors).forEach(({ properties }) => {
+      errors[properties.path] = properties.message;
+    });
+  }
+
+  return errors;
 };
 
 module.exports = { signup, login };

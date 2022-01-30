@@ -12,4 +12,12 @@ app.use(express.json());
 
 app.use("/api", userRoutes, mailRoutes);
 
+app.get("/", (req, res) => {
+  res.status(400).sendFile(path.join(__dirname + "/src/pages/index.html"));
+});
+
+app.get("/*", (req, res) => {
+  res.status(400).sendFile(path.join(__dirname + "/src/pages/404.html"));
+});
+
 app.listen(9000, () => console.log("Server connected smoothly..."));
