@@ -26,16 +26,18 @@ const login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
     console.log(req.body);
-    const user = await User.findOne({ username });
+    let user = await User.findOne({ username })
+      .populate("inbox")
+      .populate("sent");
     if (!user) next(new Error("User does not exist!"));
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return next(new Error("Invalid Credentials"));
-
     const accessToken = jwt.sign({ id: user._id }, "123456789", {
       expiresIn: "1h",
     });
 
     await User.findByIdAndUpdate(user._id, { accessToken });
+
     res.status(200).json({
       user,
       accessToken,
