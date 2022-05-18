@@ -7,7 +7,7 @@ const signup = async (req, res) => {
     const { username, password } = req.body;
     console.log(req.body);
     if (!username && !password) {
-      res.status(400).json({ message: "All fie;lds required!!" });
+      res.status(400).json({ message: "All fields required!!" });
     }
     const usernameExist = await User.findOne({ username });
     if (usernameExist) {
@@ -15,10 +15,13 @@ const signup = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await User.create({ username, password: hashedPassword });
-    res.status(201).json(user);
+
+    res.status(201).json({ user });
+    console.log({ user });
   } catch (error) {
-    const errObj = handlErrors(error);
-    res.status(400).json(errObj);
+    console.error(error);
+    // const errObj = handlErrors(error);
+    // res.status(400).json(errObj);
   }
 };
 
@@ -43,8 +46,10 @@ const login = async (req, res, next) => {
       accessToken,
     });
   } catch (error) {
-    const errMsg = handlErrors(error);
-    res.status(400).json(errMsg);
+    console.error(error);
+    // const errMsg = handlErrors(error);
+    // console.log(errMsg);
+    // res.status(400).json(errMsg);
   }
 };
 
